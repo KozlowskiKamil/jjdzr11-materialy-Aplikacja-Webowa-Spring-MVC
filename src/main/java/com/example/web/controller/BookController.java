@@ -2,29 +2,46 @@ package com.example.web.controller;
 
 import com.example.web.dto.BookDto;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping("products/books")
 public class BookController {
 
-    public String getBookModel(Integer isbn,
-                               String title) {
+    @GetMapping("model/{isbn}")
+    public String getBookModel(@PathVariable Integer isbn,
+                               @RequestParam(required = false, name = "tytul", defaultValue = "cool novel") String title,
+                               Model model) {
         BookDto bookDto = createBook(isbn, title);
-        return null;
+        model.addAttribute("book", bookDto);
+        model.addAttribute("bookTitle", "Model Book Page");
+        return "book";
     }
 
-    public String getBookModelMap(Integer isbn,
-                                  String title) {
+    @GetMapping("model-map/{isbn}")
+    public String getBookModelMap(@PathVariable Integer isbn,
+                                  @RequestParam(required = false, name = "tytul", defaultValue = "cool novel") String title,
+                                  ModelMap map) {
         BookDto bookDto = createBook(isbn, title);
-        return null;
+        map.addAttribute("book", bookDto);
+        map.addAttribute("bookTitle", "ModelMap Book Page");
+        return "book";
     }
 
-    public ModelAndView getBookModelAndView(Integer isbn,
-                                            String title) {
+    @GetMapping("model-and-view/{isbn}")
+    public ModelAndView getBookModelAndView(@PathVariable Integer isbn,
+                                            @RequestParam(required = false, name = "tytul", defaultValue = "cool novel") String title) {
         BookDto bookDto = createBook(isbn, title);
-        return null;
+        ModelAndView modelAndView = new ModelAndView("book");
+        modelAndView.addObject("book", bookDto);
+        modelAndView.addObject("bookTitle", "ModelAndView Book Page");
+        return modelAndView;
     }
 
     private BookDto createBook(Integer isbn, String title) {
